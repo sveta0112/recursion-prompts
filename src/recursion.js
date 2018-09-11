@@ -589,18 +589,25 @@ var compress = function(list) {//[1,2,2,3,4,4,5,5,5],[2,2,3,4,4,5,5,5],[2,3,4,4,
 // 33. Augument every element in a list with a new value where each element is an array
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
-var augmentElements = function(array, aug) {
-	var res = [];
-	for(var i = 0; i < array.length; i++){
-		if(Array.isArray(array[i])){
-      res = res.concat(augmentElements(array[i],aug));
-		}else{
-			res.push(array[i],aug);
-		}
-	}
-   return res;
+var augmentElements = function(array, aug) {// arr = [[],[3],[7]], aug = 5
+                                            // arr = [[3],[7]], aug = 5
+                                            // arr = [[7]], aug = 5
+                                            // arr = [], aug = 5
+  if (array.length === 0){ //[].length === 0
+    return array; //[]
+  }
+
+  var firstEl = array[0];//[]; [3]; [7]
+  var rest = array.slice(1);//[[3],[7]]; [[7]]; []
+
+  var result = augmentElements(rest, aug);//augElements([[3],[7]],5); augElements([[7]],5);augElements([],5);
+
+  return [firstEl.concat([aug])].concat(result);
+  //[[7].concat([5])->[7,5]].concat([[7,5]])
+  //[[3].concat([5])->[3,5]].concat([[3,5],[7,5]])
+  //[[].concat([5])->[5]].concat([[5],[3,5],[7,5]])
+
 };
-//console.log(augmentElements([[],[3],[7]],5));
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
